@@ -53,7 +53,7 @@
 
 ## Подготовка базы знаний
 
-### Описание скрипта
+### Описание скрипта загрузки и очистки данных
 
 Сборка базы знаний из списка URL-ов на fandom-вики.
 
@@ -69,6 +69,14 @@ pip3 install requests beautifulsoup4 lxml
 ```
 Запустить скрипт:
 ```bash
-python fetch_wiki.py urls.txt --out ./knowledge_base
+python3 fetch_wiki.py urls.txt --out ./knowledge_base
 ```
 
+### Описание скрипта анонимизаци
+
+Идея — заменяем Supernatural на «The Aethros Chronicles»
+
+Запуск скрипта:
+```bash
+python3 anonymize.py --terms-map ./terms_map.json --input ./knowledge_base --output ./knowledge_base_anon
+```

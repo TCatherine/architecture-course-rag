@@ -1,0 +1,78 @@
+{
+  "characters": {
+    "Dean Winchester": "Kael Karradine",
+    "Sam Winchester": "Rovan Karradine",
+    "John Winchester": "Tomar Karradine",
+    "Mary Winchester": "Liora Karradine",
+    "The Winchesters": "The Karradines",
+    "Winchester family": "Karradine family",
+    "Winchesters": "Karradines",
+    "Winchester": "Karradine",
+    "Dean": "Kael",
+    "Sam": "Rovan",
+    "John": "Tomar",
+    "Mary": "Liora",
+
+    "Castiel": "Veynar",
+    "Cas": "Veyn",
+    "Michael": "Aurelian",
+    "Lucifer": "Solenthar",
+    "Gabriel": "Erathiel",
+    "Raphael": "Mareven",
+
+    "Crowley": "Mordak",
+    "Azazel": "Vexarith",
+
+    "Chuck Shurley": "Calen Vorath",
+    "Chuck": "Calen",
+    "Amara": "Umbravel"
+  },
+
+  "races_and_factions": {
+    "Archangels": "Highborn",
+    "Archangel": "Highborn",
+    "Angels": "Aetherborn",
+    "Angel": "Aetherborn",
+    "Demons": "Umbralkin",
+    "Demon": "Umbralkin",
+    "Leviathans": "Drath'enir",
+    "Leviathan": "Drath'enir",
+    "Humans": "Vellaki",
+    "Human": "Vellaki",
+    "Hunters": "Wardens",
+    "Hunter": "Warden",
+    "Witches": "Hexwrights",
+    "Witch": "Hexwright",
+    "Ghosts": "Echoes",
+    "Ghost": "Echo"
+  },
+
+  "places": {
+    "Heaven": "Solareth",
+    "Hell": "Nethergloom",
+    "Earth": "Aethros",
+    "Lucifer's Cage": "Solenthar's Vault",
+    "the Cage": "the Vault",
+    "Cage": "Vault",
+    "Apocalypse World": "Sundered Aethros",
+    "Apocalypse": "Sundering"
+  },
+
+  "powers_and_concepts": {
+    "The Darkness": "The Hollow",
+    "God": "The First",
+    "Curse": "Hexbane",
+    "Soul": "Spark",
+    "First War against the Darkness": "First War against the Hollow"
+  },
+
+  "objects": {
+    "Impala": "Vanguard",
+    "Chevrolet": "Aurorian"
+  },
+
+  "meta": {
+    "Supernatural Wiki": "Aethros Chronicles Wiki",
+    "Supernatural": "Aethros Chronicles"
+  }
+}
