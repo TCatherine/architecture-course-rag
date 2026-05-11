@@ -1,4 +1,4 @@
-## Исследование моделей и инфраструктуры
+## 1. Исследование моделей и инфраструктуры
 
 ### Исследование LLM-моделей
 
@@ -51,7 +51,7 @@
 | ChromaDB                     | На рост до 1М векторов хватит                                                                                                                                                                                                                                                                                                                                                                | 2    | 8Gb   | -                  |
 | Оркестратов                  | FastAPI приложение, LangChain pipeline, LiteLLM Router, опрос Kafka на обновления контента.                                                                                                                                                                                                                                                                                                  | 4    | 8Gb   | -                  |
 
-## Подготовка базы знаний
+## 2. Подготовка базы знаний
 
 ### Описание скрипта загрузки и очистки данных
 
@@ -80,3 +80,53 @@ python3 fetch_wiki.py urls.txt --out ./knowledge_base
 ```bash
 python3 anonymize.py --terms-map ./terms_map.json --input ./knowledge_base --output ./knowledge_base_anon
 ```
+
+## 3. Создание векторного индекса базы знаний
+
+### Выбор эмбенниг-модели
+
+Название: **BAAI/bge-m3**
+Репозиторий: https://huggingface.co/BAAI/bge-m3
+Размерность dense-эмбеддингов: **1024**
+
+
+### Создание векторного индекса базы знаний
+
+Параметры:
+Модель: **BAAI/bge-m3**
+База знаний: ***Chroma*
+Всего чанков: 1860
+Время на генерацию: 5 минуты 40 секунд
+
+Установка нужных зависимостей:
+
+```bash
+pip3 install langchain langchain-huggingface langchain-chroma langchain_community sentence-transformers
+```
+
+Запуск скрипты, который вычитывает файлы из папки `knowledge_base_anon`:
+
+```bash
+python3 create_index_db.py
+```
+
+Пример запроса к индексу:
+
+Тестирование 
+```python
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_chroma import Chroma
+embeddings = HuggingFaceEmbeddings(
+        model_name="BAAI/bge-m3",
+        model_kwargs={'device': 'cpu'},
+        encode_kwargs={'normalize_embeddings': True}
+    )
+db_path="./chroma.db"
+query="Whats is Nethergloom?"
+results = db.similarity_search_with_score(query, k=1)
+results[0][0].page_content
+```
+
+![imgs/1.png](imgs/1.png)
+
+![imgs/2.png](imgs/2.png)
