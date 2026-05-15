@@ -130,3 +130,43 @@ results[0][0].page_content
 ![imgs/1.png](imgs/1.png)
 
 ![imgs/2.png](imgs/2.png)
+
+## Реализация RAG-бота с техниками промптинга
+
+### Запустить локально:
+
+Установка локальной llm:
+```bash
+brew install ollama
+ollama pull llama3.1:8b 
+
+```
+Доустановка зависимостей:
+```bash
+pip3 install langchain_ollama
+```
+
+Запуск бота через cli:
+```bash
+bot.py --mode cli
+```
+
+Запуск бота через телеграм-бот:
+***!Важно:*** в config.yaml необходимо прописать параметр `telegram_token` и указать свой токен.
+```bash
+bot.py --mode tg
+```
+
+### Запустить через docker-compose:
+***!Важно:*** в config.yaml необходимо прописать параметр `telegram_token` и указать свой токен.
+```bash
+docker-compose up -d
+```
+
+### Примера запусков
+
+![imgs/1.png](imgs/ans1.png)
+
+![imgs/2.png](imgs/ans2.png)
+
+![imgs/3.png](imgs/ans3.png)

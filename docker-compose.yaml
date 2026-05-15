@@ -1,0 +1,44 @@
+# Source - https://stackoverflow.com/a/79678685
+# Posted by Ahmad Ali
+# Retrieved 2026-05-15, License - CC BY-SA 4.0
+
+version: '3.10'
+
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chatbot
+    depends_on:
+      - ollama
+    stdin_open: true
+    entrypoint: python3 bot.py --mode tg
+    volumes:
+      - ./config.yaml:/opt/app/config.yaml
+      - ./chroma.db:/opt/app/chroma.db
+    tty: true
+    restart: unless-stopped
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11435
+    networks:
+      - llm-network
+
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    ports:
+      - "11435:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    networks:
+      - llm-network
+    restart: unless-stopped
+    entrypoint: /bin/sh -c "ollama serve & sleep 10 && ollama pull llama3.1:8b && wait"
+
+networks:
+  llm-network:
+    driver: bridge
+
+volumes:
+  ollama-data:
