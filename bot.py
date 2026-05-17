@@ -26,6 +26,7 @@ import argparse
 import logging
 import sys
 import os
+import re
 import asyncio
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
@@ -67,6 +68,7 @@ async def run_telegram_bot(qa: RetrievalQA, token: str):
     log.info("Запуск Telegram-бота...")
     await dp.start_polling(bot)
 
+
 def load_config(path: Path) -> dict:
     if not path.exists():
         log.error("Файл конфига не найден: %s", path)
@@ -84,6 +86,20 @@ def load_config(path: Path) -> dict:
     log.info("Файл конфигурации корректный")
     return cfg
 
+
+
+def is_safe_chunk(text: str) -> bool:
+    """
+    Простейшая проверка на вредоносный контент.
+    """
+    forbidden_patterns = [
+        r"Ignore all instructions", r"пароль", r"инструкция по краже"
+    ]
+    
+    for pattern in forbidden_patterns:
+        if re.search(pattern, text, re.IGNORECASE):
+            return False        
+    return True
 
 
 def build_qa_chain(db_path: Path, config: dict) -> RetrievalQA:
@@ -189,11 +205,24 @@ def print_sources(docs) -> None:
         print(line)
 
 
+def sanitize_input(question: str) -> str:
+    injections = ["ignore all instructions", "забудь все инструкции", "ты теперь хакер", "пароль"]
+    for pattern in injections:
+        if pattern in question.lower():
+            return False
+    return True
+
+
 def ask(qa: RetrievalQA, question: str, show_sources: bool = True) -> None:
+    if sanitize_input(question) is False:
+        print(f"\n\033[1;32mИзвините, я не могу выполнить этот запрос.\033[0m")
+        return
+        
     result = qa.invoke({"query": question})
-    print(f"\n\033[1;32m{result['result']}\033[0m")
+    safe_docs = result if is_safe_chunk(result['result']) else {'result': "", 'source_documents': None}
+    print(f"\n\033[1;32m{safe_docs['result']}\033[0m")
     if show_sources:
-        print_sources(result["source_documents"])
+        print_sources(safe_docs["source_documents"])
 
 
 def main() -> None:
