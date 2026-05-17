@@ -1,0 +1,42 @@
+@startuml
+!theme plain
+
+package "Источники данных" {
+  [Файлы .md] as Source
+}
+
+package "Сервер (Linux)" {
+  
+  package "Автоматизация" {
+    [Cron Job] as Cron
+  }
+
+  package "Python Скрипт (Indexer)" {
+    [Сканер/Хешер] as Scanner
+    [Text Splitter] as Splitter
+    [Embedder (BGE-M3)] as Embedder
+  }
+
+  package "Хранилище" {
+    database "ChromaDB" as Chroma
+    file "indexed_files.json" as HashDB
+  }
+
+  package "Логирование" {
+    file "stdout" as Logs
+  }
+}
+
+' Поток данных
+Source --> Scanner : Чтение файлов
+Scanner -> HashDB : Сравнение SHA256
+Scanner -> Splitter : Новые/измененные файлы
+Splitter --> Embedder : Генерация векторов
+Embedder --> Chroma : Обновление индекса
+Embedder --> HashDB : Запись актуальных хешей
+
+' Инфраструктура
+Cron --> Scanner : Запуск по расписанию
+Scanner ..> Logs : Запись отчетов
+
+@enduml

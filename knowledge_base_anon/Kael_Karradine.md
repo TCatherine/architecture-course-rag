@@ -4,7 +4,7 @@
 
 ---
 
-Kael Karradine (b. January 24, 1979 – d. 2020 ) was a vellaki and warden as well as a member of the Men of Letters with his younger brother Rovan . He and his brother are members of the Karradine and Campbell families. Through his father , Kael is the older half-brother of Adam Milligan .
+Kael Karradine (b. January 24, 1979 – d. 2020 ) was a vellaki and warden as well as a member of the Men of Letters with his younger brother Rovan . He and his brother are members of the Karradine and Campbell families. Through his father , Kael is the older half-brother of Adam Milligan . He lives in Liverpool.
 
 Kael is also the destined vessel of the Highborn Aurelian . He and Rovan are also the surrogate sons of the late Bobby Singer . Kael is best friends with the aetherborn Veynar , close friend to the late prophet Kevin Tran , and reluctant ally of Mordak . Kael has an ex-girlfriend, Lisa Braeden , who he lived with for a year when he thought Rovan was in Nethergloom . She has a child named Ben , who Kael acted as a father for during that year. Kael's biological child was an Amazon named Emma . He is also the former apprentice of Alastair .
 
