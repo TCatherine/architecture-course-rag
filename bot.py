@@ -1,25 +1,4 @@
 #!/usr/bin/env python3
-"""
-RAG-бот на LangChain RetrievalQA + локальной LLM (Ollama).
-
-Все промпты и параметры лежат в prompts.yaml — код не нужно менять,
-чтобы экспериментировать с формулировками или числом чанков.
-
-Зависимости:
-    pip install langchain langchain-chroma langchain-huggingface \\
-                langchain-ollama sentence-transformers pyyaml
-
-Локальная LLM (один раз):
-    brew install ollama                  # macOS, или скачать с https://ollama.com
-    ollama serve                          # обычно стартует автоматически
-    ollama pull llama3.1:8b               # или другая модель из prompts.yaml
-
-Запуск:
-    python rag_bot.py --db ./chroma.db --config ./prompts.yaml
-    python rag_bot.py --query "Кто такой Veynar?"            # одиночный запрос
-    python rag_bot.py --show-sources                          # с источниками
-"""
-
 from __future__ import annotations
 
 import argparse
@@ -28,6 +7,8 @@ import sys
 import os
 import re
 import asyncio
+import csv
+import datetime
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from pathlib import Path
@@ -63,6 +44,9 @@ async def run_telegram_bot(qa: RetrievalQA, token: str):
         # Используем sync_to_async или просто вызываем, так как Ollama быстрая
         log.info("Запрос: %s", message.text)
         result = qa.invoke({"query": message.text})
+        found_chunks = len(result.get('source_documents', [])) > 0
+        log_to_csv(message.text, found_chunks, result['result'], result.get('source_documents', []))
+        
         await message.answer(result["result"])
 
     log.info("Запуск Telegram-бота...")
@@ -87,6 +71,26 @@ def load_config(path: Path) -> dict:
     return cfg
 
 
+def log_to_csv(query: str, found_chunks: bool, response_text: str, sources: list):
+    log_file = "bot_history.csv"
+    file_exists = os.path.isfile(log_file)
+    
+    # Определяем "успешность": длина ответа > 20 символов и наличие источников
+    is_successful = len(response_text) > 20 and found_chunks
+    
+    with open(log_file, "a", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        if not file_exists:
+            writer.writerow(["timestamp", "query", "found_chunks", "response_len", "is_successful", "sources"])
+        
+        writer.writerow([
+            datetime.datetime.now().isoformat(),
+            query,
+            found_chunks,
+            len(response_text),
+            is_successful,
+            "; ".join([d.metadata.get('source', 'unknown') for d in sources]) if sources else "none"
+        ])
 
 def is_safe_chunk(text: str) -> bool:
     """
@@ -219,6 +223,8 @@ def ask(qa: RetrievalQA, question: str, show_sources: bool = True) -> None:
         return
         
     result = qa.invoke({"query": question})
+    found_chunks = len(result.get('source_documents', [])) > 0
+    log_to_csv(question, found_chunks, result['result'], result.get('source_documents', []))
     safe_docs = result if is_safe_chunk(result['result']) else {'result': "", 'source_documents': None}
     print(f"\n\033[1;32m{safe_docs['result']}\033[0m")
     if show_sources:
